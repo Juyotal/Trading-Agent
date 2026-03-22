@@ -1,0 +1,93 @@
+trading_mode: paper
+
+broker:
+  host: "127.0.0.1"
+  port: 7497
+  client_id: 1
+  timeout: 30
+  auto_reconnect: true
+
+instruments:
+  # Micros — recommended while validating the strategy (1/10 notional of the E-minis)
+  MNQ:
+    symbol: "MNQ"
+    exchange: "CME"
+    sec_type: "FUT"
+    currency: "USD"
+    description: "Micro E-mini NASDAQ 100 Futures ($2/pt)"
+    prompt_key: "NQ"
+  MES:
+    symbol: "MES"
+    exchange: "CME"
+    sec_type: "FUT"
+    currency: "USD"
+    description: "Micro E-mini S&P 500 Futures ($5/pt)"
+    prompt_key: "ES"
+  MGC:
+    symbol: "MGC"
+    exchange: "COMEX"
+    sec_type: "FUT"
+    currency: "USD"
+    description: "Micro Gold Futures ($10/pt, 10oz contract)"
+    prompt_key: "XAUUSD"
+
+  # Full-size contracts — only after baseline validation on micros
+  NQ:
+    symbol: "NQ"
+    exchange: "CME"
+    sec_type: "FUT"
+    currency: "USD"
+    description: "E-mini NASDAQ 100 Futures ($20/pt)"
+  ES:
+    symbol: "ES"
+    exchange: "CME"
+    sec_type: "FUT"
+    currency: "USD"
+    description: "E-mini S&P 500 Futures ($50/pt)"
+  XAUUSD:
+    symbol: "XAUUSD"
+    exchange: "IDEALPRO"
+    sec_type: "CASH"
+    currency: "USD"
+    description: "Gold Spot"
+
+analysis:
+  bar_size: "5 mins"
+  lookback_bars: 50
+  indicators:
+    ema_periods: [9, 21, 50]
+    rsi_period: 14
+    atr_period: 14
+    bb_period: 20
+    bb_std: 2.0
+
+claude:
+  model: "claude-sonnet-4-20250514"
+  max_tokens: 1024
+  temperature: 0.2
+  max_retries: 2
+
+risk:
+  max_position_size: 1
+  max_concurrent_positions: 3
+  daily_loss_limit_pct: 2.0
+  min_confidence: 0.7
+  risk_per_trade_pct: 1.0
+  memory_path: "trade_memory.jsonl"
+  memory_size: 20
+
+schedule:
+  interval_minutes: 5
+  market_hours:
+    futures_start: "18:00"
+    futures_end: "17:00"
+    forex_start: "17:00"
+    forex_end: "17:00"
+  timezone: "US/Eastern"
+
+session:
+  weekend_close_buffer_minutes: 30
+  session_close_buffer_minutes: 15
+  first_bar_window_minutes: 10
+  gap_atr_threshold: 2.0
+  flatten_into_weekend: true
